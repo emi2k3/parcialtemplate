@@ -3,11 +3,11 @@ import { Static, Type } from "@sinclair/typebox";
 export const ComentarioSchema = Type.Object({
     id_tarea: Type.String({
         minLength: 1,
-        pattern: "^[^\\d]+$",
+        pattern: "^[0-9]+$",
     }),
     id_usuario: Type.String({
         minLength: 1,
-        pattern: "^[^\\d]+$",
+        pattern: "^[0-9]+$",
     }),
     fecha_ingresado: Type.String({
         format: "date-time",

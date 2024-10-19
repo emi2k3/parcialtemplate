@@ -14,7 +14,10 @@ declare module "fastify" {
     verifySelf: authenticateFunction;
     verifySelfOrAdmin: authenticateFunction;
     verifyTaskCreator: authenticateFunction;
+    verifyCommentCreator: authenticateFunction;
+    logger: true
   }
+
 }
 
 declare module "@fastify/jwt" {
@@ -23,3 +26,4 @@ declare module "@fastify/jwt" {
     user: UsuarioType;
   }
 }
+

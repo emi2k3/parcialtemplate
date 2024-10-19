@@ -13,6 +13,7 @@ services:
       - PGUSER=${PGUSER}
       - PGPASSWORD=${PGPASSWORD}
       - PGHOST=${PGHOST}
+      - PGPORT=${PGPORT}
   front:
     image: nginx:alpine
     container_name: front
@@ -27,8 +28,6 @@ services:
       - POSTGRES_DB=${PGDATABASE}
       - POSTGRES_USER=${PGUSER}
       - POSTGRES_PASSWORD=${PGPASSWORD}
-    ports:
-      - 5432:5432
   proxy:
     image: nginx:alpine
     container_name: proxy

@@ -7,6 +7,8 @@ import { FastifyReply } from "fastify/types/reply.js";
 import { IdUsuarioType } from "../types/usuario.js";
 import { IdTareaType, TareaFullType } from "../types/tarea.js";
 import * as tareaService from "../services/tareas.js";
+import { ComentarioSchema } from "../types/comentarios.js";
+import { query } from "../services/db.js";
 
 const jwtOptions: FastifyJWTOptions = {
   secret: "MYSUPERSECRET",
@@ -66,6 +68,28 @@ export default fp<FastifyJWTOptions>(async (fastify) => {
       //Si no es admin, ni es el usuario que la creó.
       if (
         usuarioToken.id_usuario !== tarea.id_usuario &&
+        !usuarioToken.is_admin
+      )
+        throw reply.unauthorized(
+          "No estás autorizado a modificar una tarea que no creaste tu."
+        );
+    }
+  );
+
+  fastify.decorate(
+    "verifyCommentCreator",
+    async function (request: FastifyRequest, reply: FastifyReply) {
+      const usuarioToken = request.user;
+      const id_comentario = (request.params as { id: string }).id;
+      console.log(id_comentario);
+      const resultado = await query("SELECT * FROM comentarios where id_comentario=$1", [id_comentario]) //Si no lo encuentra ya tira notFound
+      //Si no es admin, ni es el usuario que la creó.
+      if (resultado.rowCount === 0)
+        reply.unauthorized("El comentario no existe.");
+      const comentario: ComentarioSchema = resultado.rows[0];
+
+      if (
+        usuarioToken.id_usuario !== Number(comentario.id_usuario) &&
         !usuarioToken.is_admin
       )
         throw reply.unauthorized(
